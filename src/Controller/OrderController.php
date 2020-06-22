@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Order;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
-class OrderController extends AbstractController
+class OrderController extends AbstractFOSRestController
 {
     /**
      * @Route("/order", name="order")
@@ -16,5 +18,10 @@ class OrderController extends AbstractController
             'message' => 'Welcome to your new controller!',
             'path' => 'src/Controller/OrderController.php',
         ]);
+    }
+
+    public function getOrders()
+    {
+        $repository = $this->getDoctrine()->getRepository(Order::class);
     }
 }
