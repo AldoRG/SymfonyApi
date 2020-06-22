@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\OrderRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -37,6 +39,49 @@ class Order
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $notes;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Pizza", inversedBy="orders")
+     */
+    private $pizzas;
+
+    /**
+     * @return Collection
+     */
+    public function getPizzas(): Collection
+    {
+        return $this->pizzas;
+    }
+
+    /**
+     * @param Pizza $pizza
+     * @return Collection|Pizza[]
+     */
+    public function addPizza(Pizza $pizza): self
+    {
+        if (!$this->pizzas->contains($pizza)) {
+            $this->pizzas[] = $pizza;
+        }
+        return $this;
+    }
+
+    /**
+     * @param Pizza $pizza
+     * @return Collection|Pizza[]
+     */
+    public function removePizza(Pizza $pizza): self
+    {
+        if ($this->pizzas->contains($pizza)) {
+            $this->pizzas-removeElement($pizza);
+        }
+
+        return $this;
+    }
+
+    public function __construct()
+    {
+        $this->pizzas = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
