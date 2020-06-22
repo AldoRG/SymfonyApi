@@ -40,11 +40,17 @@ class Pizza
     private $orders;
 
     /**
+     * @ORM\ManyToMany(targetEntity=Topping::class, mappedBy="pizzas")
+     */
+    private $toppings;
+
+    /**
      * Pizza constructor.
      */
     public function __construct()
     {
         $this->orders = new ArrayCollection();
+        $this->toppings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -118,6 +124,34 @@ class Pizza
         if ($this->orders->contains($order)) {
             $this->orders->removeElement($order);
             $order->removePizza($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Topping[]
+     */
+    public function getToppings(): Collection
+    {
+        return $this->toppings;
+    }
+
+    public function addTopping(Topping $topping): self
+    {
+        if (!$this->toppings->contains($topping)) {
+            $this->toppings[] = $topping;
+            $topping->addPizza($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTopping(Topping $topping): self
+    {
+        if ($this->toppings->contains($topping)) {
+            $this->toppings->removeElement($topping);
+            $topping->removePizza($this);
         }
 
         return $this;

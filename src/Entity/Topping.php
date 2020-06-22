@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ToppingRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,6 +28,16 @@ class Topping
      * @ORM\Column(type="float", nullable=true)
      */
     private $extra_price;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Pizza::class, inversedBy="toppings")
+     */
+    private $pizzas;
+
+    public function __construct()
+    {
+        $this->pizzas = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -52,6 +64,32 @@ class Topping
     public function setExtraPrice(?float $extra_price): self
     {
         $this->extra_price = $extra_price;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Pizza[]
+     */
+    public function getPizzas(): Collection
+    {
+        return $this->pizzas;
+    }
+
+    public function addPizza(Pizza $pizza): self
+    {
+        if (!$this->pizzas->contains($pizza)) {
+            $this->pizzas[] = $pizza;
+        }
+
+        return $this;
+    }
+
+    public function removePizza(Pizza $pizza): self
+    {
+        if ($this->pizzas->contains($pizza)) {
+            $this->pizzas->removeElement($pizza);
+        }
 
         return $this;
     }
