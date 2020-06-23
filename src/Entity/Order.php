@@ -13,6 +13,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Order
 {
+    const STATUSES = [
+        'ordered' => 1,
+        'shipped' => 2,
+        'completed' => 3
+    ];
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -44,6 +49,11 @@ class Order
      * @ORM\ManyToMany(targetEntity="App\Entity\Pizza", inversedBy="orders")
      */
     private $pizzas;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $status;
 
     /**
      * @return Collection
@@ -132,6 +142,18 @@ class Order
     public function setNotes(?string $notes): self
     {
         $this->notes = $notes;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
